@@ -1,0 +1,29 @@
+{
+  "name": "maps-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "leaflet": "^1.8.0",
+    "leaflet-draw": "^1.0.4",
+    "localforage": "^1.10.0",
+    "moment": "^2.29.3",
+    "next": "^12.1.6",
+    "normalize.css": "^8.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-leaflet": "^3.2.5",
+    "react-leaflet-draft-nextjs": "^1.0.2",
+    "socket.io-client": "^4.5.0"
+  }
+}

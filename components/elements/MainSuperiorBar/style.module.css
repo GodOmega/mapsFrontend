@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-green-color);
+    height: 100%;
+}
+
+.image {
+    width: 80px;
+}

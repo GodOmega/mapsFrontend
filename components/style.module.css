@@ -1,0 +1,9 @@
+.container {
+    position: relative;
+    height: 50vh;
+    background-color: red;
+}
+
+.button {
+    margin-bottom: 2rem;
+}

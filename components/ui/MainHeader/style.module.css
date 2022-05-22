@@ -1,0 +1,9 @@
+.header_container {
+    background-color: var(--main-green-color);
+    padding: 0 1rem;
+}
+
+.header_elements {
+    width: 100%;
+    height: 100%;
+}

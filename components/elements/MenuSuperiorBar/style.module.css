@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.logo {
+    text-align: end;
+    flex: 1 1 10%;
+}
+
+.logo svg {
+    width: 60px;
+}
+
+.menu_icon {
+    text-align: end;
+    flex: 1 1 60%;
+    cursor: pointer;
+}
+
+.menu_icon svg {
+    width: 30px;
+}

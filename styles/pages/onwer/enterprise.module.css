@@ -1,0 +1,85 @@
+.header {
+    width: 100%;
+    height: 83px;
+}
+
+.container {
+    min-height: calc((100vh - 83px) + 81px);
+    background-color: var(--grey);
+}
+
+.sections {
+    background-color: var(--white);   
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+}
+
+/* ---------- ENTERPRISE INFORMATION SECTION ----------- */
+
+.user_info__section {
+    padding: 1rem 0;
+}
+
+.user__info_container {
+    display:  flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user__info_container h2 {
+    font-weight: 500;
+    font-size: 2rem;
+}
+
+/* ---------- ENTERPRISE ACTIONS ----------- */
+
+
+.enterprise__actions button {
+    color: var(--white);
+    font-size: .9rem;
+    font-weight: 500;
+    margin-bottom: 1.3rem;
+}
+
+.button_primary {
+    background-color: var(--secondary-green);
+}
+
+.button_secondary {
+    background-color: var(--yellow);
+}
+
+.button_back{
+    background-color: #8f8f8f;
+    color: black;
+}
+
+/* ---------- ENTERPRISE GROUPS ----------- */
+
+.groups__section h2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.groups__container {
+    padding: 1rem 0 81px;
+}
+
+.group__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.3rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid #333;
+    border-radius: 10px;
+}
+
+.group__item a { 
+    text-decoration: none;
+    color: var(--white);
+    padding: .7rem .5rem;
+    background-color: var(--secondary-green);
+    font-weight: 500;
+    border-radius: 20px;
+}
