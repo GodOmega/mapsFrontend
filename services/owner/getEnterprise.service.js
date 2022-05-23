@@ -6,7 +6,7 @@ export default async (token, id) => {
   };
   if (id && token) {
     const { data } = await axios.get(
-      `${process.env.API_HOST}/enterprises/${id}`,
+      `${process.env.NEXT_PUBLIC_API_HOST}/enterprises/${id}`,
       config
     );
     return data;

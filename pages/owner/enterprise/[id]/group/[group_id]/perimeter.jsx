@@ -77,7 +77,7 @@ const perimeter = () => {
     };
 
     axios
-      .put(`${process.env.API_HOST}/enterprises/groups/${group_id}`, input, config)
+      .put(`${process.env.NEXT_PUBLIC_API_HOST}/enterprises/groups/${group_id}`, input, config)
       .then((data) => {
         alert('Perimetro actualizado')
       })

@@ -28,7 +28,7 @@ const login = () => {
       };
 
       const { data } = await axios.post(
-        `${process.env.API_HOST}/auth/login`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/auth/login`,
         credentials
       );
 
