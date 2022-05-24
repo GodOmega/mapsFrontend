@@ -52,11 +52,12 @@ const group = () => {
     } catch (error) {
       alert("Ocurrio un error");
     }
-    
+
   };
 
   useEffect(() => {
     if (!group) {
+      console.log('enterprise')
       Promise.all([getGroupService(acces_token, group_id)])
         .then(([group]) => {
           setGroup(group);
