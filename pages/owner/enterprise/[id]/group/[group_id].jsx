@@ -52,6 +52,7 @@ const group = () => {
     } catch (error) {
       alert("Ocurrio un error");
     }
+    
   };
 
   useEffect(() => {
