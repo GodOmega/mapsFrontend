@@ -1,0 +1,9 @@
+.page_title_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page__title {
+    font-size: 1.6rem;
+}

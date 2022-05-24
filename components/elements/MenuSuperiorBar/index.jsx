@@ -12,7 +12,7 @@ const MenuSuperiorBar = () => {
         <LogoIcon />
       </div>
       <div className={styles.menu_icon}>
-        <MenuIcon />
+        <MenuIcon fill='#fff' />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ const MapPerimeter = ({ lat, lng, perimeter, createPerimeter, deletePerimeter, o
   }
 
   return (
-    <MapContainer center={[9.8975679, -67.9046703]} zoom={17} scrollWheelZoom={true}>
+    <MapContainer center={[lat, lng]} zoom={17} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

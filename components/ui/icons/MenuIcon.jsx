@@ -3,7 +3,7 @@ import * as React from "react"
 const MenuIcon = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 288.2" {...props}>
     <defs>
-      <style>{".cls-3{fill:#fff}"}</style>
+      <style>{`cls-3{fill:#fff}`}</style>
     </defs>
     <g id="Capa_2" data-name="Capa 2">
       <g id="Capa_1-2" data-name="Capa 1">

@@ -10,6 +10,7 @@ import MainHeader from "../../../../../../components/ui/MainHeader";
 
 import styles from "../../../../../../styles/pages/onwer/group/editPerimeter.module.css";
 import { config } from "localforage";
+import updateGroupService from "../../../../../../services/group/updateGroup.service";
 
 const MapPerimeter = dynamic(
   () => import("../../../../../../components/elements/MapPerimeter"),
@@ -70,21 +71,15 @@ const perimeter = () => {
     setPerimeter(null);
   };
 
-  const handleSubmit = (token) => {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-      input
-    };
-
-    axios
-      .put(`${process.env.NEXT_PUBLIC_API_HOST}/enterprises/groups/${group_id}`, input, config)
-      .then((data) => {
-        alert('Perimetro actualizado')
-      })
-      .catch((error) => {
-        alert('ocurrio un error')
-      });
-  }
+  const handleSubmit = async (token) => {
+    try {
+      await updateGroupService(group_id, token, input);
+      alert("Perimetro actualizado");
+    } catch (error) {
+      console.log(error);
+      alert("Ocurrio un error al actualizar");
+    }
+  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(getPosition, error, options);
@@ -118,11 +113,17 @@ const perimeter = () => {
           )}
           <div className="container_width">
             {perimeter && (
-              <button onClick={() => handleSubmit(acces_token)} className={`main_button ${styles.buttons} ${styles.button_primary}`}>
-              Actualizar perimetro
-            </button>
+              <button
+                onClick={() => handleSubmit(acces_token)}
+                className={`main_button ${styles.buttons} ${styles.button_primary}`}
+              >
+                Actualizar perimetro
+              </button>
             )}
-            <button onClick={() => router.back()} className={`main_button ${styles.buttons} ${styles.button_back}`}>
+            <button
+              onClick={() => router.back()}
+              className={`main_button ${styles.buttons} ${styles.button_back}`}
+            >
               Volver
             </button>
           </div>
