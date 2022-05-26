@@ -195,7 +195,7 @@ const work = () => {
 
     const interval = setInterval(() => {
       testMessage()
-    }, 2000);
+    }, 15000);
 
     return () => {
       navigator.geolocation.clearWatch(location);
