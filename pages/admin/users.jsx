@@ -149,7 +149,13 @@ export default function AdminUsers() {
       setUser(null);
       alert("Usuario actualizado");
     } catch (error) {
-      console.log(error);
+      const { response } = error;
+      if (response.status === 401) {
+        loggoutAuth();
+        userLoggout();
+        router.push("/login");
+      }
+      alert('Ha ocurrido un error al acualizar')
     }
   };
 

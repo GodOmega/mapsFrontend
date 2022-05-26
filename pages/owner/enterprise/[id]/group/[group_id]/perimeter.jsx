@@ -79,7 +79,6 @@ const perimeter = () => {
       await updateGroupService(group_id, token, input);
       alert("Perimetro actualizado");
     } catch (error) {
-      console.log(error);
       alert("Ocurrio un error al actualizar");
     }
   };

@@ -98,16 +98,22 @@ export default function AdminEnterprises() {
       };
       const { data } = await getUserByEmail(userData, acces_token);
       setUser(data);
-      setUserErrMsg(null)
+      setUserErrMsg(null);
     } catch (error) {
-      const {response} = error
+      const { response } = error;
 
-      if(response.status === 404) {
-        setUser(null)
-        setUserErrMsg(true)
+      if (response.status === 404) {
+        setUser(null);
+        setUserErrMsg(true);
       }
 
-      console.log(error);
+      if (response.status === 401) {
+        loggoutAuth();
+        userLoggout();
+        router.push("/login");
+      }
+
+      alert("Ha ocurrido un error");
     }
   };
 
@@ -251,7 +257,11 @@ export default function AdminEnterprises() {
             <Col className="mb-3" sm="12" lg="6">
               <form onSubmit={handleGetUser}>
                 <div className="form-group mb-2">
-                  {userErrMsg && <div className="alert alert-danger">Usuario no encontrado</div>}
+                  {userErrMsg && (
+                    <div className="alert alert-danger">
+                      Usuario no encontrado
+                    </div>
+                  )}
                   <label className="mb-2" htmlFor="emailUser">
                     Escoger dueño
                   </label>

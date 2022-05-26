@@ -19,6 +19,8 @@ import getGroupEmployeesService from "../../../../../services/group/getGroupEmpl
 import deleteGroupService from "../../../../../services/group/deleteGroup.service";
 import addEmployeeService from "../../../../../services/group/addEmployee.service";
 
+import { UserLoggedContext } from "../../../../../stores/userLoggedContext";
+
 const group = () => {
   const [group, setGroup] = useState(null);
   const [workersOnline, setWorkersOnline] = useState([]);
@@ -35,7 +37,10 @@ const group = () => {
 
   const {
     authState: { acces_token, role },
+    loggoutAuth,
   } = useContext(AuthContext);
+
+  const { userLoggout } = useContext(UserLoggedContext);
 
   const handleBack = () => {
     disconnect();
@@ -125,17 +130,23 @@ const group = () => {
   };
 
   useEffect(() => {
-    if(role) {
+    if (role) {
       if (!group) {
         Promise.all([getGroupService(acces_token, group_id)])
           .then(([group]) => {
             setGroup(group);
           })
-          .catch((err) => {
-            console.log(err);
+          .catch((error) => {
+            const { response } = error;
+
+            if (response.status === 401) {
+              loggoutAuth();
+              userLoggout();
+              router.push("/login");
+            }
           });
       }
-  
+
       if (socket) {
         if (group) {
           joinRoom({
@@ -152,7 +163,7 @@ const group = () => {
       }
     }
     const timeout = setTimeout(() => {
-      if(role) {
+      if (role) {
         if (role == "worker") {
           router.push("/work");
         }
@@ -170,7 +181,6 @@ const group = () => {
     return () => {
       clearTimeout(timeout);
     };
-
   }, [group_id, acces_token, group, role]);
 
   return (

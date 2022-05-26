@@ -5,7 +5,6 @@ const index = () => {
   const { authState } = useContext(AuthContext);
   const router = useRouter();
 
-  console.log(authState);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

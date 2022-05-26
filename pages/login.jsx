@@ -22,7 +22,6 @@ const login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submit");
     try {
       const credentials = {
         email: email.current.value,

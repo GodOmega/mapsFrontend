@@ -23,7 +23,6 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submit");
     try {
       const changes = {
         email: email.current.value,
