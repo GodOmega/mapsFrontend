@@ -464,7 +464,7 @@ export default function AdminUsers() {
                         <option value="">Selecciona un rol</option>
                         <option value="worker">Empleado</option>
                         <option value="owner">Dueño</option>
-                        <option value="admin">Admnistrador</option>
+                        <option value="admin">Administrador</option>
                       </select>
                     )}
                   </div>

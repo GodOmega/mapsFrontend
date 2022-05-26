@@ -23,7 +23,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const credentials = {
-        email: email.current.value,
+        email: email.current.value.toLowerCase(),
         password: password.current.value,
         name: name.current.value,
         lastname: lastname.current.value,
