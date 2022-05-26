@@ -1,5 +1,6 @@
 import { useRef, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import axios from "axios";
 
 import { AuthContext } from "../stores/authContext";
@@ -63,7 +64,7 @@ const login = () => {
   };
 
   useEffect(() => {
-    if(authState.role) {
+    if(authState?.role) {
       if(authState.role === 'worker') {
         router.push('/work')
       }
@@ -114,6 +115,9 @@ const login = () => {
               />
             </div>
           </form>
+          <Link className="text-center" href="/register">
+            <a>¿No tienes cuenta? Registrate.</a>
+          </Link>
         </div>
       </main>
       <footer className={styles.login_footer}>

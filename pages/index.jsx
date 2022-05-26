@@ -1,30 +1,40 @@
-import { useEffect, useContext  } from 'react'
-import {useRouter} from 'next/router'
+import { useEffect, useContext } from "react";
+import { useRouter } from "next/router";
 import { AuthContext } from "../stores/authContext";
 const index = () => {
-
   const { authState } = useContext(AuthContext);
-  const router = useRouter()
+  const router = useRouter();
 
-  console.log(authState)
+  console.log(authState);
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      if(authState) {
+        if (!authState.role) {
+          router.push("/login");
+        }
+  
+        if (authState.role == "owner") {
+          router.push("/owner");
+        }
+  
+        if (authState.role == "admin") {
+          router.push("/admin/users");
+        }
+  
+        if (authState.role == "worker") {
+          router.push("/work");
+        }
+      }
+      router.push('/login')
+    }, 600);
 
-    if(authState.role == 'owner') {
-      router.push('/owner')
-    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [authState]);
 
-    if(authState.role == 'admin') {
-      router.push('/admin/users')
-    }
-
-    if(authState.role == 'worker') {
-      router.push('/work')
-    }
-
-  }, [authState])
-
-  return ''
+  return "";
 };
 
 export default index;

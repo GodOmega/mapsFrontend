@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
 import moment from "moment";
 import styles from "../styles/pages/work.module.css";
@@ -25,16 +25,23 @@ import {
 
 import verifyPerimeter from "../utils/verifyPerimeter";
 const work = () => {
+  // STATES
   const [userPosition, setUserPosition] = useState(null);
-  const { userState } = useContext(UserLoggedContext);
   const [connected, setConnected] = useState(false);
   const [lunchTime, setLunchTime] = useState(false);
   const [perimeter, setPerimeter] = useState(null);
-
-  // STATES
+  
   const {
-    authState: { acces_token, role },
+    authState,
+    loggoutAuth
   } = useContext(AuthContext);
+  const { userState, userLoggout } = useContext(UserLoggedContext);
+
+  let perimeterForCalc = null
+  let statusConnect = useRef(false)
+
+  const acces_token = authState?.acces_token
+  const role = authState?.role
 
   //Date format
   const year = moment().format("YY");
@@ -67,11 +74,17 @@ const work = () => {
   };
 
   const youAreInPerimeter = (position) => {
-    if(connected) {
-      const isInPerimeter = verifyPerimeter(position, perimetro);
-      console.log(isInPerimeter)
+    if(statusConnect.current && perimeterForCalc.length) {
+      const isInPerimeter = verifyPerimeter(position, perimeterForCalc);
+      console.log('in')
+      if(!isInPerimeter) {
+        setConnected(false)
+        statusConnect.current = false
+        alert('Saliste del perimetro')
+      }
     }
   }
+
 
   const handleJoinWork = (position, perimetro) => {
     if(!perimeter) {
@@ -89,6 +102,7 @@ const work = () => {
           name: userState.name,
           lastname: userState.lastname,
         });
+        statusConnect.current = true
         return setConnected(true);
       }
 
@@ -100,12 +114,14 @@ const work = () => {
     if (connected) {
       disconnectOfWork();
       setConnected(false);
+      statusConnect.current = false
     }
   };
 
   const handleStartLunch = () => {
     if (connected) {
       startLunch();
+      statusConnect.current = false;
       setConnected(false);
       setLunchTime(true);
     }
@@ -122,7 +138,7 @@ const work = () => {
       error,
       options
     );
-    if(role === 'worker') {
+    if(authState?.role === 'worker') {
       
   
       if (userState.employe?.enterpriseGroupId) {
@@ -133,10 +149,16 @@ const work = () => {
             .then(([group]) => {
               if (group.perimeter) {
                 setPerimeter(JSON.parse(group.perimeter));
+                perimeterForCalc = JSON.parse(group.perimeter)
               }
             })
             .catch((err) => {
-              console.log(err);
+              const { response } = err;
+              if(response.status === 401){
+                loggoutAuth()
+                userLoggout()
+                router.push('/login')
+              }
             });
         }
       }
@@ -149,16 +171,22 @@ const work = () => {
     }
 
     const timeout = setTimeout(() => {
-      if(!role) {
+      if(authState?.role) {
+        if(!role) {
+          router.push('/login')
+        }
+  
+        if(role == 'owner') {
+          router.push('/owner')
+        }
+  
+        if(role == 'admin') {
+          router.push('/admin/users')
+        }
+      }
+
+      if(!authState?.role) {
         router.push('/login')
-      }
-
-      if(role == 'owner') {
-        router.push('/owner')
-      }
-
-      if(role == 'admin') {
-        router.push('/admin/users')
       }
 
     }, 600);
@@ -167,7 +195,7 @@ const work = () => {
       navigator.geolocation.clearWatch(location);
       clearTimeout(timeout)
     };
-  }, [userState, acces_token, socket, role]);
+  }, [userState, acces_token, socket, authState]);
 
   return (
     <>
