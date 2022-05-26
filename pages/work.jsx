@@ -294,7 +294,7 @@ const work = () => {
         </section>
       </main>
       <div className={styles.audio}>
-        <audio  src="/audio/loop.mp3" ref={audioElement} loop controls></audio>
+        <audio  src="/audio/test.mp3" ref={audioElement} loop controls></audio>
       </div>
     </>
   );
