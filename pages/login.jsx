@@ -35,7 +35,7 @@ const login = () => {
       );
 
       const { acces_token } = data;
-      const { role, username, name, lastname, enterprises, employe, image } =
+      const { role, username, name, lastname, enterprises, employe, image, id, email: userEmail } =
         data.user;
 
       login({ role, username, acces_token });
@@ -45,6 +45,8 @@ const login = () => {
         enterprises,
         employe,
         image,
+        id,
+        email: userEmail
       });
 
       if (role === "owner") {

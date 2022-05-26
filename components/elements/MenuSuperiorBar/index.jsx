@@ -40,7 +40,9 @@ const MenuSuperiorBar = () => {
       <div className={styles.fixed_menu}>
         <div className={styles.fixed_menu__container}>
           <div className={styles.fixed_menu__button}>
-            <button onClick={handleLoggout}  className={`main_button`}>cerrar sesión</button>
+
+            <button onClick={() => router.push('/profile')} className={`main_button mb-3`}>Perfil</button>
+            <button onClick={handleLoggout} className={`main_button `}>cerrar sesión</button>
           </div>
           <div onClick={handleShowMenu} className={styles.fixed_menu__close_icon}>
             <CloseIcon fill="#fff"/>

@@ -32,7 +32,7 @@ const Enterprise = () => {
 
   const router = useRouter();
   const {
-    authState: { acces_token },
+    authState: { acces_token, role },
     loggoutAuth,
   } = useContext(AuthContext);
 
@@ -49,34 +49,39 @@ const Enterprise = () => {
   const handleOpenUserModal = () => setShowUserModal(true);
   const handleCloseUserModal = () => setShowUserModal(false);
 
-
   const getWorkTimeEmployee = () => {
-    if(getEmployeeWithTime.work.hours === 0  && getEmployeeWithTime.work.minutes === 0) {
-      return '0'
+    if (
+      getEmployeeWithTime.work.hours === 0 &&
+      getEmployeeWithTime.work.minutes === 0
+    ) {
+      return "0";
     }
 
     if (getEmployeeWithTime.work.hours > 0) {
-      return `${getEmployeeWithTime.work.hours} horas`
+      return `${getEmployeeWithTime.work.hours} horas`;
     }
 
     if (getEmployeeWithTime.work.minutes > 0) {
-      return `${getEmployeeWithTime.work.minutes} minutos`
+      return `${getEmployeeWithTime.work.minutes} minutos`;
     }
-  }
+  };
 
   const getLunchTimeEmployee = () => {
-    if(getEmployeeWithTime.lunch.hours === 0  && getEmployeeWithTime.lunch.minutes === 0) {
-      return '0'
+    if (
+      getEmployeeWithTime.lunch.hours === 0 &&
+      getEmployeeWithTime.lunch.minutes === 0
+    ) {
+      return "0";
     }
 
     if (getEmployeeWithTime.lunch.hours > 0) {
-      return `${getEmployeeWithTime.lunch.hours} horas`
+      return `${getEmployeeWithTime.lunch.hours} horas`;
     }
 
     if (getEmployeeWithTime.lunch.minutes > 0) {
-      return `${getEmployeeWithTime.lunch.minutes} minutos`
+      return `${getEmployeeWithTime.lunch.minutes} minutos`;
     }
-  }
+  };
 
   const handleGroupSubmit = async (e) => {
     e.preventDefault();
@@ -143,7 +148,7 @@ const Enterprise = () => {
       const { response } = error;
 
       if (response.status === 404) {
-        setGetEmployeeMessage(["empleado no encontrado"]);
+        return setGetEmployeeMessage(["empleado no encontrado"]);
       }
 
       if (response.status === 401) {
@@ -152,28 +157,50 @@ const Enterprise = () => {
         router.push("/login");
       }
 
-      console.log(error);
+      alert('Ha ocurrido un error')
     }
   };
 
   useEffect(() => {
-    if (acces_token) {
-      Promise.all([getEnterpriseService(acces_token, id)])
-        .then(([enterprise]) => {
-          const { data } = enterprise;
-          setEnterprise(data);
-        })
-        .catch((err) => {
-          const { response } = err;
-          if (response.status === 401) {
-            loggoutAuth();
-            userLoggout();
-            router.push("/login");
-          }
-          alert("Ha ocurrido un error");
-        });
+    if (role) {
+      if (acces_token) {
+        Promise.all([getEnterpriseService(acces_token, id)])
+          .then(([enterprise]) => {
+            const { data } = enterprise;
+            setEnterprise(data);
+          })
+          .catch((err) => {
+            const { response } = err;
+            if (response.status === 401) {
+              loggoutAuth();
+              userLoggout();
+              router.push("/login");
+            }
+            alert("Ha ocurrido un error");
+          });
+      }
     }
-  }, [id, acces_token]);
+
+    const timeout = setTimeout(() => {
+      if (role) {
+        if (role == "worker") {
+          router.push("/work");
+        }
+
+        if (role == "admin") {
+          router.push("/admin/users");
+        }
+      }
+
+      if (!role) {
+        router.push("/login");
+      }
+    }, 600);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [id, acces_token, role]);
 
   return (
     <>
@@ -343,29 +370,25 @@ const Enterprise = () => {
               </div>
               {getEmployeeWithTime && (
                 <Table striped bordered hover size="sm">
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Horas trabajo (hoy)</th>
-                    <th>Horas almuerzo (hoy)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {getEmployeeWithTime && (
-                  <tr>
-                    <td>{getEmployeeWithTime.name}</td>
-                    <td>{getEmployeeWithTime.lastname}</td>
-                    <td>
-                      {getWorkTimeEmployee()}
-                    </td>
-                    <td>
-                      {getLunchTimeEmployee()}
-                    </td>
-                  </tr>
-                  )}
-                </tbody>
-              </Table>
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Horas trabajo (hoy)</th>
+                      <th>Horas almuerzo (hoy)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getEmployeeWithTime && (
+                      <tr>
+                        <td>{getEmployeeWithTime.name}</td>
+                        <td>{getEmployeeWithTime.lastname}</td>
+                        <td>{getWorkTimeEmployee()}</td>
+                        <td>{getLunchTimeEmployee()}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
               )}
 
               {getEmployeeMessage.length > 0 && (
@@ -375,7 +398,6 @@ const Enterprise = () => {
                       {item}
                     </p>
                   ))}
-                  
                 </div>
               )}
 

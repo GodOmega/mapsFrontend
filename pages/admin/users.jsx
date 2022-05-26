@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { Col, Row, Table } from "reactstrap";
 
 import { Modal, Button } from "react-bootstrap";
@@ -14,12 +14,14 @@ import {
   createUser,
   deleteUser,
   getUserByEmail,
+  updateByAdmin,
 } from "../../services/users.service";
 
 export default function AdminUsers() {
   const [user, setUser] = useState(null);
   const [userErrMsg, setUserErrMsg] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const router = useRouter();
 
@@ -33,8 +35,14 @@ export default function AdminUsers() {
   const userRole = useRef(null);
   const userPassword = useRef(null);
 
+  const updateEmail = useRef(null);
+  const updateName = useRef(null);
+  const updateLastname = useRef(null);
+  const updateRole = useRef(null);
+  const updatePassword = useRef(null);
+
   const {
-    authState: { acces_token },
+    authState: { acces_token, role },
     loggoutAuth,
   } = useContext(AuthContext);
 
@@ -42,6 +50,9 @@ export default function AdminUsers() {
 
   const openDeleteModal = () => setShowDeleteModal(true);
   const closeDeleteModal = () => setShowDeleteModal(false);
+
+  const openUpdateModal = () => setShowUpdateModal(true);
+  const closeUpdateModal = () => setShowUpdateModal(false);
 
   const handleGetUserSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +64,7 @@ export default function AdminUsers() {
       const { data } = await getUserByEmail(payload, acces_token);
       setUser(data);
       userEmail.current.value = "";
+      setUserErrMsg(null);
     } catch (error) {
       const { response } = error;
       if (response.status === 404) {
@@ -99,12 +111,12 @@ export default function AdminUsers() {
       lastname: userLastname.current.value,
       password: userPassword.current.value,
       role: userRole.current.value,
-      gender: userGender
+      gender: userGender,
     };
     try {
       const { data } = await createUser(payload, acces_token);
       alert("Usuario creado con éxito");
-      e.target.reset()
+      e.target.reset();
     } catch (error) {
       const { response } = error;
       if (response.status === 401) {
@@ -112,9 +124,56 @@ export default function AdminUsers() {
         userLoggout();
         router.push("/login");
       }
-      alert('Ocurrio un error')
+      alert("Ocurrio un error");
     }
   };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      email: updateEmail.current.value,
+      name: updateName.current.value,
+      lastname: updateLastname.current.value,
+      password: updatePassword.current.value,
+      role: updateRole.current.value,
+    };
+
+    try {
+      const { data } = await updateByAdmin(user?.id, userData, acces_token);
+      setShowUpdateModal(false);
+      updateEmail.current.value = "";
+      updateName.current.value = "";
+      updateLastname.current.value = "";
+      updatePassword.current.value = "";
+      setUser(null);
+      alert("Usuario actualizado");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (role) {
+        if (role == "worker") {
+          router.push("/work");
+        }
+
+        if (role == "owner") {
+          router.push("/owner");
+        }
+      }
+
+      if (!role) {
+        router.push("/login");
+      }
+    }, 600);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [role]);
 
   return (
     <FullLayout>
@@ -136,7 +195,9 @@ export default function AdminUsers() {
           <Row className="mb-3">
             <Col sm="12">
               <h5>Buscar usuario</h5>
-              {userErrMsg && <p>{userErrMsg}</p>}
+              {userErrMsg && (
+                <div className="alert alert-danger">{userErrMsg}</div>
+              )}
             </Col>
             <Col sm="12" className="mb-5">
               <form onSubmit={handleGetUserSubmit}>
@@ -175,9 +236,15 @@ export default function AdminUsers() {
                       <td>
                         <button
                           onClick={openDeleteModal}
-                          className="btn btn-sm btn-danger"
+                          className="btn btn-sm mb-2 mx-2 btn-danger"
                         >
                           Delete
+                        </button>
+                        <button
+                          onClick={openUpdateModal}
+                          className="btn mx-2 mb-2 btn-sm btn-primary"
+                        >
+                          Update
                         </button>
                       </td>
                     </tr>
@@ -240,8 +307,16 @@ export default function AdminUsers() {
 
                 <div className="form-group col-md-6 mb-2">
                   <label htmlFor="userRole">Role</label>
-                  <select className="form-control" ref={userRole} name="role" required id="userRole">
-                    <option value="" checked>Selecciona un rol</option>
+                  <select
+                    className="form-control"
+                    ref={userRole}
+                    name="role"
+                    required
+                    id="userRole"
+                  >
+                    <option value="" checked>
+                      Selecciona un rol
+                    </option>
                     <option value="admin">administrador</option>
                     <option value="owner">Dueño</option>
                     <option value="worker">empleado</option>
@@ -259,7 +334,10 @@ export default function AdminUsers() {
                       value="M"
                       onChange={handleChangeGender}
                     />
-                    <label className="form-check-label" htmlFor="flexRadioDefault1">
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexRadioDefault1"
+                    >
                       Masculino
                     </label>
                   </div>
@@ -273,7 +351,10 @@ export default function AdminUsers() {
                       checked
                       onChange={handleChangeGender}
                     />
-                    <label className="form-check-label" htmlFor="flexRadioDefault2">
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexRadioDefault2"
+                    >
                       Femenino
                     </label>
                   </div>
@@ -286,7 +367,10 @@ export default function AdminUsers() {
                       value="O"
                       onChange={handleChangeGender}
                     />
-                    <label className="form-check-label" htmlFor="flexRadioDefault3">
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexRadioDefault3"
+                    >
                       Otros
                     </label>
                   </div>
@@ -313,6 +397,99 @@ export default function AdminUsers() {
           </Row>
         </div>
       </div>
+
+      {/* MODLA UPDATE USER */}
+
+      <Modal show={showUpdateModal} onHide={closeUpdateModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Actualizar empleado</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleUpdateUser}>
+            <div className="row">
+              {user && (
+                <>
+                  <div className="form-group mb-2">
+                    <label htmlFor="editUserEmail">Email</label>
+                    <input
+                      type="email"
+                      id="editUserEmail"
+                      className="form-control"
+                      defaultValue={user.email}
+                      ref={updateEmail}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group mb-2">
+                    <label htmlFor="editUserName">Nombre: </label>
+                    <input
+                      type="text"
+                      id="editUserName"
+                      className="form-control"
+                      defaultValue={user.name}
+                      ref={updateName}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group mb-2">
+                    <label htmlFor="editUserLastname">Apellido: </label>
+                    <input
+                      type="text"
+                      id="editUserLastname"
+                      className="form-control"
+                      defaultValue={user.lastname}
+                      ref={updateLastname}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group mb-2">
+                    <label htmlFor="editUserRole">Role: </label>
+                    {user && (
+                      <select
+                        name="role"
+                        className="form-control"
+                        id="editUserRole"
+                        ref={updateRole}
+                        required
+                      >
+                        <option value="">Selecciona un rol</option>
+                        <option value="worker">Empleado</option>
+                        <option value="owner">Dueño</option>
+                        <option value="admin">Admnistrador</option>
+                      </select>
+                    )}
+                  </div>
+
+                  <div className="form-group mb-2">
+                    <label htmlFor="editUserPassword">
+                      Contraseña <small>(opcional)</small>:{" "}
+                    </label>
+                    <input
+                      type="text"
+                      id="editUserPassword"
+                      className="form-control"
+                      ref={updatePassword}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={closeUpdateModal}>
+                cancelar
+              </Button>
+              <input
+                type="submit"
+                className="btn btn-primary"
+                value={"Actualizar"}
+              />
+            </Modal.Footer>
+          </form>
+        </Modal.Body>
+      </Modal>
 
       {/* MODAL DELETE USER */}
 

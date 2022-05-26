@@ -30,18 +30,15 @@ const work = () => {
   const [connected, setConnected] = useState(false);
   const [lunchTime, setLunchTime] = useState(false);
   const [perimeter, setPerimeter] = useState(null);
-  
-  const {
-    authState,
-    loggoutAuth
-  } = useContext(AuthContext);
+
+  const { authState, loggoutAuth } = useContext(AuthContext);
   const { userState, userLoggout } = useContext(UserLoggedContext);
 
-  let perimeterForCalc = null
-  let statusConnect = useRef(false)
+  let perimeterForCalc = null;
+  let statusConnect = useRef(false);
 
-  const acces_token = authState?.acces_token
-  const role = authState?.role
+  const acces_token = authState?.acces_token;
+  const role = authState?.role;
 
   //Date format
   const year = moment().format("YY");
@@ -66,7 +63,7 @@ const work = () => {
     setUserPosition((preState) => {
       if (preState) {
         if (newPosition) {
-          youAreInPerimeter(newPosition)
+          youAreInPerimeter(newPosition);
         }
       }
       return newPosition;
@@ -74,21 +71,21 @@ const work = () => {
   };
 
   const youAreInPerimeter = (position) => {
-    if(statusConnect.current && perimeterForCalc.length) {
+    if (statusConnect.current && perimeterForCalc.length) {
       const isInPerimeter = verifyPerimeter(position, perimeterForCalc);
-      console.log('in')
-      if(!isInPerimeter) {
-        setConnected(false)
-        statusConnect.current = false
-        alert('Saliste del perimetro')
+      if (!isInPerimeter) {
+        setConnected(false);
+        statusConnect.current = false;
+        alert(
+          "Saliste del perimetro y te has desconectado, si deseas reconectar vuelve al perimetroy reporta tu ingreso"
+        );
       }
     }
-  }
-
+  };
 
   const handleJoinWork = (position, perimetro) => {
-    if(!perimeter) {
-      alert('Aun no hay un perimetro cargado')
+    if (!perimeter) {
+      alert("Aun no hay un perimetro disponible");
     }
 
     if (perimetro && position) {
@@ -102,7 +99,7 @@ const work = () => {
           name: userState.name,
           lastname: userState.lastname,
         });
-        statusConnect.current = true
+        statusConnect.current = true;
         return setConnected(true);
       }
 
@@ -114,7 +111,7 @@ const work = () => {
     if (connected) {
       disconnectOfWork();
       setConnected(false);
-      statusConnect.current = false
+      statusConnect.current = false;
     }
   };
 
@@ -138,9 +135,7 @@ const work = () => {
       error,
       options
     );
-    if(authState?.role === 'worker') {
-      
-  
+    if (authState?.role === "worker") {
       if (userState.employe?.enterpriseGroupId) {
         if (!perimeter) {
           Promise.all([
@@ -149,20 +144,20 @@ const work = () => {
             .then(([group]) => {
               if (group.perimeter) {
                 setPerimeter(JSON.parse(group.perimeter));
-                perimeterForCalc = JSON.parse(group.perimeter)
+                perimeterForCalc = JSON.parse(group.perimeter);
               }
             })
             .catch((err) => {
               const { response } = err;
-              if(response.status === 401){
-                loggoutAuth()
-                userLoggout()
-                router.push('/login')
+              if (response.status === 401) {
+                loggoutAuth();
+                userLoggout();
+                router.push("/login");
               }
             });
         }
       }
-  
+
       if (!socket) {
         connectSocket({
           acces_token,
@@ -171,29 +166,28 @@ const work = () => {
     }
 
     const timeout = setTimeout(() => {
-      if(authState?.role) {
-        if(!role) {
-          router.push('/login')
+      if (authState?.role) {
+        if (!role) {
+          router.push("/login");
         }
-  
-        if(role == 'owner') {
-          router.push('/owner')
+
+        if (role == "owner") {
+          router.push("/owner");
         }
-  
-        if(role == 'admin') {
-          router.push('/admin/users')
+
+        if (role == "admin") {
+          router.push("/admin/users");
         }
       }
 
-      if(!authState?.role) {
-        router.push('/login')
+      if (!authState?.role) {
+        router.push("/login");
       }
-
     }, 600);
 
     return () => {
       navigator.geolocation.clearWatch(location);
-      clearTimeout(timeout)
+      clearTimeout(timeout);
     };
   }, [userState, acces_token, socket, authState]);
 
@@ -216,7 +210,7 @@ const work = () => {
                 {userState.name} {userState.lastname}
               </h3>
               {connected && <p className="m-0">Estas conectado</p>}
-              {lunchTime && <p className="m-0" >Estas en Lunch</p>}
+              {lunchTime && <p className="m-0">Estas en Lunch</p>}
             </div>
           </div>
         </section>

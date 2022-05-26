@@ -7,12 +7,15 @@ const navigation = [
   {
     title: "Users",
     href: "/admin/users",
-    icon: "bi bi-speedometer2",
   },
   {
     title: "Empresas",
     href: "/admin/enterprises",
-    icon: "bi bi-bell",
+  },
+
+  {
+    title: "Admin Perfil",
+    href: "/profile",
   },
 ];
 

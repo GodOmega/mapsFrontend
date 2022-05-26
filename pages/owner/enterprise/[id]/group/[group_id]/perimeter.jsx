@@ -1,17 +1,18 @@
 import { useState, useEffect, useContext } from "react";
 import dynamic from "next/dynamic";
-import axios from "axios";
 
 import { useRouter } from "next/router";
 
-import getGroupService from "../../../../../../services/group/getGroup.service";
 import { AuthContext } from "../../../../../../stores/authContext";
+import { UserLoggedContext } from "../../../../../../stores/userLoggedContext";
+
 import MainHeader from "../../../../../../components/ui/MainHeader";
 
 import styles from "../../../../../../styles/pages/onwer/group/editPerimeter.module.css";
-import { config } from "localforage";
-import updateGroupService from "../../../../../../services/group/updateGroup.service";
 
+// Services
+import getGroupService from "../../../../../../services/group/getGroup.service";
+import updateGroupService from "../../../../../../services/group/updateGroup.service";
 const MapPerimeter = dynamic(
   () => import("../../../../../../components/elements/MapPerimeter"),
   {
@@ -29,9 +30,11 @@ const perimeter = () => {
   const { group_id } = router.query;
 
   const {
-    authState: { acces_token },
+    authState: { acces_token, role },
+    loggoutAuth
   } = useContext(AuthContext);
 
+  const {userLoggout} = useContext(UserLoggedContext)
   const options = {
     enableHighAccuracy: true,
     timeout: 8000,
@@ -82,18 +85,48 @@ const perimeter = () => {
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(getPosition, error, options);
+    
+    if (role) {
+      navigator.geolocation.getCurrentPosition(getPosition, error, options);
+      Promise.all([getGroupService(acces_token, group_id)])
+        .then(([group]) => {
+          if (group?.perimeter) {
+            setOldPerimeter(JSON.parse(group.perimeter));
+          }
+        })
+        .catch((error) => {
+          const {response} = error
 
-    Promise.all([getGroupService(acces_token, group_id)])
-      .then(([group]) => {
-        if (group?.perimeter) {
-          setOldPerimeter(JSON.parse(group.perimeter));
+          if(response.status === 401) {
+            loggoutAuth()
+            userLoggout()
+            router.push('/login')
+          }
+
+          alert('Ha ocurrido un error')
+        });
+    }
+
+    const timeout = setTimeout(() => {
+      if (role) {
+        if (role == "worker") {
+          router.push("/work");
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [group_id, acces_token]);
+
+        if (role == "admin") {
+          router.push("/admin/users");
+        }
+      }
+
+      if (!role) {
+        router.push("/login");
+      }
+    }, 600);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [group_id, acces_token, role]);
 
   return (
     <>

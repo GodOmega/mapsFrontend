@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useRef, useState, useContext } from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Col, Row, Table } from "reactstrap";
 import { Modal, Button } from "react-bootstrap";
@@ -20,9 +20,10 @@ export default function AdminEnterprises() {
 
   // user state
   const [user, setUser] = useState(null);
+  const [userErrMsg, setUserErrMsg] = useState(null);
 
   const {
-    authState: { acces_token },
+    authState: { acces_token, role },
     loggoutAuth,
   } = useContext(AuthContext);
 
@@ -97,8 +98,15 @@ export default function AdminEnterprises() {
       };
       const { data } = await getUserByEmail(userData, acces_token);
       setUser(data);
-      console.log(data);
+      setUserErrMsg(null)
     } catch (error) {
+      const {response} = error
+
+      if(response.status === 404) {
+        setUser(null)
+        setUserErrMsg(true)
+      }
+
       console.log(error);
     }
   };
@@ -127,6 +135,28 @@ export default function AdminEnterprises() {
       }
     }
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (role) {
+        if (role == "worker") {
+          router.push("/work");
+        }
+
+        if (role == "owner") {
+          router.push("/owner");
+        }
+      }
+
+      if (!role) {
+        router.push("/login");
+      }
+    }, 600);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [role]);
 
   return (
     <FullLayout>
@@ -221,6 +251,7 @@ export default function AdminEnterprises() {
             <Col className="mb-3" sm="12" lg="6">
               <form onSubmit={handleGetUser}>
                 <div className="form-group mb-2">
+                  {userErrMsg && <div className="alert alert-danger">Usuario no encontrado</div>}
                   <label className="mb-2" htmlFor="emailUser">
                     Escoger dueño
                   </label>

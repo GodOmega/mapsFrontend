@@ -34,7 +34,7 @@ const group = () => {
   const { id, group_id } = router.query;
 
   const {
-    authState: { acces_token },
+    authState: { acces_token, role },
   } = useContext(AuthContext);
 
   const handleBack = () => {
@@ -111,36 +111,67 @@ const group = () => {
         userLoggout();
         router.push("/login");
       }
+
+      if (response.status == 400) {
+        return alert("Ya pertenece a un grupo u a otra empresa");
+      }
+
+      if (response.status === 404) {
+        return alert("Usuario no encontrado");
+      }
+
       alert("Ha ocurrido un error agregando al empleado");
     }
   };
 
   useEffect(() => {
-    if (!group) {
-      Promise.all([getGroupService(acces_token, group_id)])
-        .then(([group]) => {
-          setGroup(group);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-
-    if (socket) {
-      if (group) {
-        joinRoom({
-          enterpriseId: group.enterpriseId,
-          groupId: group.id,
-        });
-        socket.on("room_workers", (data) => {
-          setWorkersOnline(data);
-        });
+    if(role) {
+      if (!group) {
+        Promise.all([getGroupService(acces_token, group_id)])
+          .then(([group]) => {
+            setGroup(group);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+  
+      if (socket) {
+        if (group) {
+          joinRoom({
+            enterpriseId: group.enterpriseId,
+            groupId: group.id,
+          });
+          socket.on("room_workers", (data) => {
+            setWorkersOnline(data);
+          });
+        }
+      }
+      if (!socket) {
+        connectSocket({ acces_token });
       }
     }
-    if (!socket) {
-      connectSocket({ acces_token });
-    }
-  }, [group_id, acces_token, group]);
+    const timeout = setTimeout(() => {
+      if(role) {
+        if (role == "worker") {
+          router.push("/work");
+        }
+
+        if (role == "admin") {
+          router.push("/admin/users");
+        }
+      }
+
+      if (!role) {
+        router.push("/login");
+      }
+    }, 600);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+
+  }, [group_id, acces_token, group, role]);
 
   return (
     <>
