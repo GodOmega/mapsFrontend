@@ -1,4 +1,4 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -15,8 +15,9 @@ const login = () => {
   const password = useRef(null);
   const router = useRouter();
 
-  const { login } = useContext(AuthContext);
-  const { userState, userLogged } = useContext(UserLoggedContext);
+  const { login, authState } = useContext(AuthContext);
+  const { userLogged } = useContext(UserLoggedContext);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +37,6 @@ const login = () => {
       const { role, username, name, lastname, enterprises, employe, image } =
         data.user;
 
-      console.log(data.user)
       login({ role, username, acces_token });
       userLogged({
         name,
@@ -53,13 +53,30 @@ const login = () => {
       if (role === "worker") {
         router.push("/work");
       }
+
+      if(role === "admin"){
+        router.push("/admin/users");
+      } 
     } catch (error) {
-      const { request } = error;
-      if (request) {
-        console.log(request.status);
-      }
+      alert('Usuario o contraseña icorrectos')
     }
   };
+
+  useEffect(() => {
+    if(authState.role) {
+      if(authState.role === 'worker') {
+        router.push('/work')
+      }
+
+      if(authState.role === 'owner') {
+        router.push('/owner')
+      }
+
+      if(authState.role === 'admin') {
+        router.push('/admin/users')
+      }
+    }
+  }, [authState])
 
   return (
     <>

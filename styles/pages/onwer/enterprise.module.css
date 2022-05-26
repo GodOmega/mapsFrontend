@@ -75,8 +75,13 @@
     border-radius: 10px;
 }
 
+.group__item h3 {
+    font-size: 1.2rem;
+}
+
 .group__item a { 
     text-decoration: none;
+    text-align: center;
     color: var(--white);
     padding: .7rem .5rem;
     background-color: var(--secondary-green);

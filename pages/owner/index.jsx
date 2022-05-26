@@ -1,13 +1,41 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
+
+
 import MainHeader from "../../components/ui/MainHeader";
 import { UserLoggedContext } from "../../stores/userLoggedContext";
+
+import { AuthContext } from "../../stores/authContext";
 
 import styles from "../../styles/pages/onwer/home.module.css";
 import fullNameFirstLetter from "../../utils/fullNameFirstLetter";
 
 const index = () => {
   const { userState } = useContext(UserLoggedContext);
+  const { authState } = useContext(AuthContext);
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if(!authState.role) {
+        router.push('/login')
+      }
+
+      if(authState.role == 'worker') {
+        router.push('/work')
+      }
+
+      if(authState.role == 'admin') {
+        router.push('/admin/users')
+      }
+
+    }, 600);
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [authState])
 
   return (
     <>

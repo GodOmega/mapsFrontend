@@ -2,9 +2,10 @@
 import { AuthContextProvider } from "../stores/authContext";
 import { UserLoggedContextProvider } from "../stores/userLoggedContext";
 
-import "bootstrap/dist/css/bootstrap.css";
+import '../styles/style.scss'
 import "../styles/globalStyles.css";
 import "../styles/normalize.css";
+import "bootstrap/dist/css/bootstrap.css";
 import { useEffect } from "react";
 
 // This default export is required in a new `pages/_app.js` file.

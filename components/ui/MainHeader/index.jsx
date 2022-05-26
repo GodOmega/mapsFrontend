@@ -8,7 +8,7 @@ const MainHeader = () => {
   return (
     <header className={` ${styles.header_container} header_main`}>
         <MenuSuperiorBar/>
-        <Navbar />
+        {/* <Navbar /> */}
     </header>
   )
 }

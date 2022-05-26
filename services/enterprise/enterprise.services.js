@@ -1,11 +1,12 @@
 import axios from "axios";
-
-export default (token, id) => {
+export const updateEnterprise = (id, token, data) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return axios.get(
+
+  return axios.put(
     `${process.env.NEXT_PUBLIC_API_HOST}/enterprises/${id}`,
+    data,
     config
   );
 };

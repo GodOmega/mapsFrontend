@@ -56,6 +56,11 @@
 /* ---------- EMPLOYEES CONNECTED ----------- */
 
 
+.employees__section {
+    margin-bottom: 3rem;
+    padding: 1rem 0 3rem;
+}
+
 .employees__section h2 {
     font-weight: 500;
     font-size: 1rem;

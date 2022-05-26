@@ -14,18 +14,27 @@ import { AuthContext } from "../stores/authContext";
 import { UserLoggedContext } from "../stores/userLoggedContext";
 import getGroupService from "../services/group/getGroup.service";
 
-import { socket, joinWork, connectSocket } from "../services/socket.service";
+import {
+  socket,
+  joinWork,
+  connectSocket,
+  disconnectOfWork,
+  startLunch,
+  stopLunch,
+} from "../services/socket.service";
 
+import verifyPerimeter from "../utils/verifyPerimeter";
 const work = () => {
   const [userPosition, setUserPosition] = useState(null);
   const { userState } = useContext(UserLoggedContext);
-  const [connected, setConnected] = useState(null);
+  const [connected, setConnected] = useState(false);
+  const [lunchTime, setLunchTime] = useState(false);
+  const [perimeter, setPerimeter] = useState(null);
 
   // STATES
   const {
-    authState: { acces_token },
+    authState: { acces_token, role },
   } = useContext(AuthContext);
-  const [perimeter, setPerimeter] = useState(null);
 
   //Date format
   const year = moment().format("YY");
@@ -48,61 +57,117 @@ const work = () => {
     };
 
     setUserPosition((preState) => {
-      // if (preState) {
-      //   if (newPosition) {
-      //     testVerify(newPosition);
-      //   }
-      // }
+      if (preState) {
+        if (newPosition) {
+          youAreInPerimeter(newPosition)
+        }
+      }
       return newPosition;
     });
   };
 
-  const handleJoinWork = () => {
-    if (perimeter) {
-      joinWork({
-        group: userState.employe?.enterpriseGroupId,
-        employeId: userState.employe?.id,
-        enterpriseId: userState.employe?.enterpriseId,
-        employeRole: userState.employe?.role,
-        name: userState.name,
-      });
-      setConnected(true);
+  const youAreInPerimeter = (position) => {
+    if(connected) {
+      const isInPerimeter = verifyPerimeter(position, perimetro);
+      console.log(isInPerimeter)
+    }
+  }
+
+  const handleJoinWork = (position, perimetro) => {
+    if(!perimeter) {
+      alert('Aun no hay un perimetro cargado')
+    }
+
+    if (perimetro && position) {
+      const isInPerimeter = verifyPerimeter(position, perimetro);
+      if (isInPerimeter) {
+        joinWork({
+          group: userState.employe?.enterpriseGroupId,
+          employeId: userState.employe?.id,
+          enterpriseId: userState.employe?.enterpriseId,
+          employeRole: userState.employe?.role,
+          name: userState.name,
+          lastname: userState.lastname,
+        });
+        return setConnected(true);
+      }
+
+      return alert("No estás en perimetro");
     }
   };
 
+  const handleDisconnectWork = () => {
+    if (connected) {
+      disconnectOfWork();
+      setConnected(false);
+    }
+  };
+
+  const handleStartLunch = () => {
+    if (connected) {
+      startLunch();
+      setConnected(false);
+      setLunchTime(true);
+    }
+  };
+
+  const handleStopLunch = () => {
+    stopLunch();
+    setLunchTime(false);
+  };
+
   useEffect(() => {
-    const location = navigator.geolocation.watchPosition(
+    let location = navigator.geolocation.watchPosition(
       handlerUserPosition,
       error,
       options
     );
-
-    if (userState.employe?.enterpriseGroupId) {
-      if (!perimeter) {
-        Promise.all([
-          getGroupService(acces_token, userState.employe?.enterpriseGroupId),
-        ])
-          .then(([group]) => {
-            if (group.perimeter) {
-              setPerimeter(JSON.parse(group.perimeter));
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+    if(role === 'worker') {
+      
+  
+      if (userState.employe?.enterpriseGroupId) {
+        if (!perimeter) {
+          Promise.all([
+            getGroupService(acces_token, userState.employe?.enterpriseGroupId),
+          ])
+            .then(([group]) => {
+              if (group.perimeter) {
+                setPerimeter(JSON.parse(group.perimeter));
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+  
+      if (!socket) {
+        connectSocket({
+          acces_token,
+        });
       }
     }
 
-    if (!socket) {
-      connectSocket({
-        acces_token,
-      });
-    }
+    const timeout = setTimeout(() => {
+      if(!role) {
+        router.push('/login')
+      }
+
+      if(role == 'owner') {
+        router.push('/owner')
+      }
+
+      if(role == 'admin') {
+        router.push('/admin/users')
+      }
+
+    }, 600);
 
     return () => {
       navigator.geolocation.clearWatch(location);
+      clearTimeout(timeout)
     };
-  }, [userState, acces_token, socket]);
+  }, [userState, acces_token, socket, role]);
 
   return (
     <>
@@ -113,7 +178,7 @@ const work = () => {
         <section className={`${styles.user_info__section} ${styles.sections}`}>
           <div className={`${styles.user__info_container} container_width`}>
             <div className={styles.user__info_image}>
-              <div>
+              <div className="m-0">
                 {fullNameFirstLetter(userState.name, userState.lastname)}
               </div>
             </div>
@@ -122,6 +187,8 @@ const work = () => {
               <h3>
                 {userState.name} {userState.lastname}
               </h3>
+              {connected && <p className="m-0">Estas conectado</p>}
+              {lunchTime && <p className="m-0" >Estas en Lunch</p>}
             </div>
           </div>
         </section>
@@ -137,27 +204,42 @@ const work = () => {
               <span>{year}</span>
             </div>
 
-            <div className={styles.work_time_container}>
-              <p>00:25:34 horas</p>
-            </div>
-
             <div className={styles.work_actions}>
-              <button
-                onClick={handleJoinWork}
-                className={`main_button ${styles.work_actions__start_work}`}
-              >
-                Reportar Ingreso
-              </button>
-              {/* <button
-                className={`main_button ${styles.work_actions__pause_work}`}
-              >
-                Reportar Lunch
-              </button>
-              <button
-                className={`main_button ${styles.work_actions__stop_work}`}
-              >
-                Reportar Salida
-              </button> */}
+              {!connected && !lunchTime && (
+                <button
+                  onClick={() => handleJoinWork(userPosition, perimeter)}
+                  className={`main_button ${styles.work_actions__start_work}`}
+                >
+                  Reportar Ingreso
+                </button>
+              )}
+
+              {connected && !lunchTime && (
+                <button
+                  onClick={handleDisconnectWork}
+                  className={`main_button ${styles.work_actions__stop_work}`}
+                >
+                  Reportar Salida
+                </button>
+              )}
+
+              {connected && !lunchTime && (
+                <button
+                  onClick={handleStartLunch}
+                  className={`main_button ${styles.work_actions__pause_work}`}
+                >
+                  Reportar Lunch
+                </button>
+              )}
+
+              {lunchTime && (
+                <button
+                  onClick={handleStopLunch}
+                  className={`main_button ${styles.work_actions__pause_work}`}
+                >
+                  Terminar Lunch
+                </button>
+              )}
             </div>
           </div>
         </section>

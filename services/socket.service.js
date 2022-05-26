@@ -23,29 +23,21 @@ export const joinWork = (params) => {
 
 export const disconnectOfWork = () => {
   if (socket) {
-    socket.emit("disconnect_work", {
-      id: "2131231",
-    });
-    socket.disconnect(true);
-    socket = null;
+    socket.emit("disconnect_work");
   }
 };
 
-export const outPerimeter = (message) => {
+export const startLunch = () => {
   if (socket) {
-    socket.emit("out_perimeter", {
-      message,
-    });
+    socket.emit("start_lunch");
   }
-};
+}
 
-export const sendMessage = (message) => {
+export const stopLunch = () => {
   if (socket) {
-    socket.emit("message", {
-      message,
-    });
+    socket.emit("stop_lunch");
   }
-};
+}
 
 export const joinRoom = (params) => {
   if(socket) {
