@@ -21,6 +21,7 @@ import {
   disconnectOfWork,
   startLunch,
   stopLunch,
+  testMessage
 } from "../services/socket.service";
 
 import verifyPerimeter from "../utils/verifyPerimeter";
@@ -74,6 +75,7 @@ const work = () => {
   const youAreInPerimeter = (position) => {
     if (statusConnect.current && perimeterForCalc.length) {
       const isInPerimeter = verifyPerimeter(position, perimeterForCalc);
+      testMessage()
       if (!isInPerimeter) {
         disconnectOfWork();
         setConnected(false);

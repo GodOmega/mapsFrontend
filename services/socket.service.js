@@ -44,3 +44,9 @@ export const joinRoom = (params) => {
     socket.emit('join_room', params)
   }
 }
+
+export const testMessage = () => {
+  if(socket) {
+    socket.emit('message', 'test message')
+  }
+}
