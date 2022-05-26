@@ -75,7 +75,6 @@ const work = () => {
   const youAreInPerimeter = (position) => {
     if (statusConnect.current && perimeterForCalc.length) {
       const isInPerimeter = verifyPerimeter(position, perimeterForCalc);
-      testMessage()
       if (!isInPerimeter) {
         disconnectOfWork();
         setConnected(false);
@@ -194,9 +193,14 @@ const work = () => {
       }
     }, 600);
 
+    const interval = setInterval(() => {
+      testMessage()
+    }, 2000);
+
     return () => {
       navigator.geolocation.clearWatch(location);
       clearTimeout(timeout);
+      clearInterval(interval)
     };
   }, [userState, acces_token, socket, authState]);
 
