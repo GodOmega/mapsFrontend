@@ -118,3 +118,9 @@
     border: 7px solid var(--secondary-green);
     height: 30vh;
 }
+
+.audio {
+    position: fixed;
+    bottom: 0;
+    opacity: 0;
+}

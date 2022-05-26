@@ -36,6 +36,7 @@ const work = () => {
 
   let perimeterForCalc = null;
   let statusConnect = useRef(false);
+  const audioElement = useRef(null)
 
   const acces_token = authState?.acces_token;
   const role = authState?.role;
@@ -74,6 +75,7 @@ const work = () => {
     if (statusConnect.current && perimeterForCalc.length) {
       const isInPerimeter = verifyPerimeter(position, perimeterForCalc);
       if (!isInPerimeter) {
+        disconnectOfWork();
         setConnected(false);
         statusConnect.current = false;
         alert(
@@ -100,6 +102,9 @@ const work = () => {
           lastname: userState.lastname,
         });
         statusConnect.current = true;
+        if(audioElement.current) {
+          audioElement.current.play()
+        }
         return setConnected(true);
       }
 
@@ -284,6 +289,9 @@ const work = () => {
           </div>
         </section>
       </main>
+      <div className={styles.audio}>
+        <audio  src="/audio/loop.mp3" ref={audioElement} loop controls></audio>
+      </div>
     </>
   );
 };
