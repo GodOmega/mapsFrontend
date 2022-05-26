@@ -104,6 +104,8 @@ const work = () => {
         statusConnect.current = true;
         if(audioElement.current) {
           audioElement.current.play()
+          audioElement.current.volume = 1
+
         }
         return setConnected(true);
       }
