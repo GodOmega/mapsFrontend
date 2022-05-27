@@ -14,6 +14,7 @@ import createGroupService from "../../../services/group/createGroup.service";
 import { updateEnterprise } from "../../../services/enterprise/enterprise.services";
 import { UserLoggedContext } from "../../../stores/userLoggedContext";
 import getEmployee from "../../../services/enterprise/getEmployee";
+import removeEmployee from "../../../services/enterprise/removeEmployee";
 
 const Enterprise = () => {
   const [enterprise, setEnterprise] = useState(null);
@@ -157,7 +158,23 @@ const Enterprise = () => {
         router.push("/login");
       }
 
-      alert('Ha ocurrido un error')
+      alert("Ha ocurrido un error");
+    }
+  };
+
+  const handleRemoveEmployee = async () => {
+    if (getEmployeeWithTime) {
+      try {
+        const employeeData = {
+          enterpriseId: id,
+          employeeId: getEmployeeWithTime.id,
+        };
+        const { data } = await removeEmployee(employeeData, acces_token);
+        setGetEmployeeWithTime(null);
+        alert("Empleado removido de la empresa");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -350,7 +367,7 @@ const Enterprise = () => {
         {/* VER EMPLEADO */}
         <Modal show={showUserModal} onHide={handleCloseUserModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Editar empresa</Modal.Title>
+            <Modal.Title>Ver usuario de la empresa</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={handleUserEmailSubmit}>
@@ -376,6 +393,7 @@ const Enterprise = () => {
                       <th>Apellido</th>
                       <th>Horas trabajo (hoy)</th>
                       <th>Horas almuerzo (hoy)</th>
+                      <th>actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -385,6 +403,15 @@ const Enterprise = () => {
                         <td>{getEmployeeWithTime.lastname}</td>
                         <td>{getWorkTimeEmployee()}</td>
                         <td>{getLunchTimeEmployee()}</td>
+                        <td>
+                          <button
+                            onClick={handleRemoveEmployee}
+                            type="button"
+                            className="btn btn-sm btn-danger"
+                          >
+                            delete
+                          </button>
+                        </td>
                       </tr>
                     )}
                   </tbody>
