@@ -47,19 +47,19 @@ const Register = () => {
   };
 
   useEffect(() => {
-    // if (authState.role) {
-    //   if (authState.role === "worker") {
-    //     router.push("/work");
-    //   }
+    if (authState?.role) {
+      if (authState.role === "worker") {
+        router.push("/work");
+      }
 
-    //   if (authState.role === "owner") {
-    //     router.push("/owner");
-    //   }
+      if (authState.role === "owner") {
+        router.push("/owner");
+      }
 
-    //   if (authState.role === "admin") {
-    //     router.push("/admin/users");
-    //   }
-    // }
+      if (authState.role === "admin") {
+        router.push("/admin/users");
+      }
+    }
   }, [authState]);
 
   return (
