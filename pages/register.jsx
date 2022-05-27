@@ -18,7 +18,6 @@ const Register = () => {
 
   const { authState } = useContext(AuthContext);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -43,26 +42,25 @@ const Register = () => {
         return alert("Este email ya se encuentra en uso");
       }
 
-
       alert("Ha ocurrido un error");
     }
   };
 
   useEffect(() => {
-    if(authState.role) {
-      if(authState.role === 'worker') {
-        router.push('/work')
+    if (authState.role) {
+      if (authState.role === "worker") {
+        router.push("/work");
       }
 
-      if(authState.role === 'owner') {
-        router.push('/owner')
+      if (authState.role === "owner") {
+        router.push("/owner");
       }
 
-      if(authState.role === 'admin') {
-        router.push('/admin/users')
+      if (authState.role === "admin") {
+        router.push("/admin/users");
       }
     }
-  })
+  }, [authState]);
 
   return (
     <>
