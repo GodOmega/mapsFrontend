@@ -287,7 +287,7 @@ export default function AdminUsers() {
                 </div>
 
                 <div className="form-group col-md-6 mb-2">
-                  <label htmlFor="userName">nombre</label>
+                  <label htmlFor="userName">Nombre</label>
                   <input
                     className="form-control"
                     type="text"
@@ -325,12 +325,12 @@ export default function AdminUsers() {
                     </option>
                     <option value="admin">administrador</option>
                     <option value="owner">Dueño</option>
-                    <option value="worker">empleado</option>
+                    <option value="worker">Empleado</option>
                   </select>
                 </div>
 
                 <div className="form-group col-md-6 mb-2">
-                  <label htmlFor="">Genero</label>
+                  <label htmlFor="">Género</label>
                   <div className="form-check mb-3">
                     <input
                       className="form-check-input"

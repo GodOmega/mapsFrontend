@@ -107,7 +107,7 @@ const Register = () => {
             </div>
 
             <div className={`${styles.form_groups}`}>
-              <label htmlFor="gender">genero: </label>
+              <label htmlFor="gender">Género: </label>
               <select
                 ref={gender}
                 className="form-control"
@@ -115,7 +115,7 @@ const Register = () => {
                 id="gender"
                 required
               >
-                <option value="">Selecciona un genero</option>
+                <option value="">Selecciona un género</option>
                 <option value="M">Masculino</option>
                 <option value="F">Femenino</option>
                 <option value="O">Otros</option>

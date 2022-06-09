@@ -495,7 +495,7 @@ const group = () => {
             {showEmployeeAddedError && <div className="alert alert-danger">Este empleado ya pertenece a un grupo o empresa</div>}
             <div className="row">
               <div className="form-group">
-                <label htmlFor="user_email">email</label>
+                <label htmlFor="user_email">Email</label>
                 <input
                   className="form-control"
                   ref={employeEmail}

@@ -21,7 +21,6 @@ const login = () => {
 
 
   const handleSubmit = async (e) => {
-    console.log('wada'.toLowerCase())
     e.preventDefault();
     try {
       const credentials = {

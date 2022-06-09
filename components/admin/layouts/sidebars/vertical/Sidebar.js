@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 const navigation = [
   {
-    title: "Users",
+    title: "Usuarios",
     href: "/admin/users",
   },
   {
