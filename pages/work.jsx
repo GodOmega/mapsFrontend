@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
 import moment from "moment";
+import { useRouter } from "next/router";
+
+
 import styles from "../styles/pages/work.module.css";
 import MainHeader from "../components/ui/MainHeader";
 
@@ -34,6 +37,9 @@ const work = () => {
 
   const { authState, loggoutAuth } = useContext(AuthContext);
   const { userState, userLoggout } = useContext(UserLoggedContext);
+
+  // ROUTER
+  const router = useRouter();
 
   let perimeterForCalc = null;
   let statusConnect = useRef(false);
