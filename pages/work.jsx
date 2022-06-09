@@ -86,7 +86,7 @@ const work = () => {
         setConnected(false);
         statusConnect.current = false;
         alert(
-          "Saliste del perimetro y te has desconectado, si deseas reconectar vuelve al perimetroy reporta tu ingreso"
+          "Saliste del perimetro y te has desconectado, si deseas reconectar vuelve al perimetro y reporta tu ingreso"
         );
       }
     }
