@@ -122,8 +122,10 @@ const group = () => {
 
         employeesArray = [...employeesArray, employeeData];
       }
-      setEmployeesWithTimes(employeesArray);
-      setLoadingData(false);
+      setTimeout(() => {
+        setEmployeesWithTimes(employeesArray);
+        setLoadingData(false);
+      }, 2500);
     } catch (error) {
       console.log(error);
     }
@@ -582,7 +584,7 @@ const group = () => {
               </TableContainer>
 
               <TablePagination
-                rowsPerPageOptions={[5, 15, 10]}
+                rowsPerPageOptions={[5, 15, 35]}
                 component="div"
                 count={employeesWithTimes.length}
                 rowsPerPage={rowsPerPage}
