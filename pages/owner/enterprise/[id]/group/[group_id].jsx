@@ -125,7 +125,7 @@ const group = () => {
       setTimeout(() => {
         setEmployeesWithTimes(employeesArray);
         setLoadingData(false);
-      }, 2500);
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -247,6 +247,8 @@ const group = () => {
         employeeId
       };
       const { data } = await removeEmployee(employeeData, acces_token);
+      setEmployeesWithTimes(null)
+      setLoadingData(true)
       handleEmployees();
       setShowDeleteEmployeeAlert(true)
 
