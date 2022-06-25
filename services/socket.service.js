@@ -4,7 +4,7 @@ export let socket = null;
 
 export const connectSocket = (params) => {
   if(!socket) {
-    socket = io(process.env.NEXT_PUBLIC_API_HOST, { auth: {...params} });
+    socket = io(process.env.NEXT_PUBLIC_SOCKET_HOST, { auth: {...params} });
   }
 }
 
