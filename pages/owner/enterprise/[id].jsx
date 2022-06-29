@@ -5,6 +5,7 @@ import { Modal, Button, Table } from "react-bootstrap";
 
 import { AuthContext } from "../../../stores/authContext";
 import MainHeader from "../../../components/ui/MainHeader";
+import LargeTimeModal from "../../../components/elements/LargeTimeModal";
 
 // Service
 import getEnterpriseService from "../../../services/owner/getEnterprise.service";
@@ -21,6 +22,7 @@ const Enterprise = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  const [showLargeTimeModal, setShowLargeTimeModal] = useState(false);
 
   const [getEmployeeWithTime, setGetEmployeeWithTime] = useState(null);
   const [getEmployeeMessage, setGetEmployeeMessage] = useState([]);
@@ -49,6 +51,9 @@ const Enterprise = () => {
 
   const handleOpenUserModal = () => setShowUserModal(true);
   const handleCloseUserModal = () => setShowUserModal(false);
+
+  const handleOpenLargeTimeModal = () => setShowLargeTimeModal(true);
+  const handleCloseLargeTimeModal = () => setShowLargeTimeModal(false);
 
   const getWorkTimeEmployee = () => {
     if (
@@ -157,8 +162,6 @@ const Enterprise = () => {
         userLoggout();
         router.push("/login");
       }
-
-      alert("Ha ocurrido un error");
     }
   };
 
@@ -245,6 +248,13 @@ const Enterprise = () => {
                     className={`main_button ${styles.button_primary}`}
                   >
                     Ver empleado
+                  </button>
+
+                  <button
+                  onClick={handleOpenLargeTimeModal}
+                    className={`main_button btn-warning`}
+                  >
+                    Ver tiempo a largo plazo
                   </button>
 
                   <button
@@ -440,6 +450,21 @@ const Enterprise = () => {
               </Modal.Footer>
             </form>
           </Modal.Body>
+        </Modal>
+
+        {/* TIEMPO DE EMPLEADO EN SEMANA O MES*/}
+        <Modal show={showLargeTimeModal} onHide={handleCloseLargeTimeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Ver usuario de la empresa</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <LargeTimeModal />
+          </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseLargeTimeModal}>
+                  cancelar
+                </Button>
+              </Modal.Footer>
         </Modal>
       </main>
     </>
