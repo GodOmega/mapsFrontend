@@ -140,9 +140,6 @@ const Profile = () => {
           </form>
         </div>
       </main>
-      <footer className={styles.login_footer}>
-        <h5>by @firstbusinesscorp</h5>
-      </footer>
     </>
   );
 };
