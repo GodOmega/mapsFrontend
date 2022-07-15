@@ -88,7 +88,7 @@ const login = () => {
       <main className={styles.main_container}>
         <div className="container_width">
           <div className={styles.icon_container}>
-            <GreetingsIcon fill="#79c471" />
+            <GreetingsIcon fill="#3372ff" />
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -121,9 +121,7 @@ const login = () => {
           </Link>
         </div>
       </main>
-      <footer className={styles.login_footer}>
-        <h5>by @firstbusinesscorp</h5>
-      </footer>
+      
     </>
   );
 };

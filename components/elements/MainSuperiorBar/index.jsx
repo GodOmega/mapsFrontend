@@ -8,7 +8,7 @@ const MainSuperiorBar = () => {
   return (
     <div className={styles.container}>
         <div className={styles.image}>
-          <LogoIcon />
+          <img src="/images/logo.png" alt="Logo" />
         </div>
     </div>
   )

@@ -9,3 +9,7 @@
 .image {
     width: 80px;
 }
+
+.image img {
+    width: 100%;
+}

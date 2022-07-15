@@ -29,7 +29,7 @@ const MenuSuperiorBar = () => {
     <>
       <div className={styles.container}>
         <div className={styles.logo}>
-          <LogoIcon />
+          <img src="/images/logo.png" alt="Logo" />
         </div>
         <div className={styles.menu_icon}>
           <MenuIcon onClick={handleShowMenu} fill='#fff' />
