@@ -27,7 +27,7 @@
 .fixed_menu {
     position: fixed;
     inset: 0;
-    background-color: var(--main-green-color);
+    background-color: #07033f;
     z-index: 10000000000000000;
 }
 

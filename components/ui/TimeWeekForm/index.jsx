@@ -145,8 +145,8 @@ const TimeWeekForm = () => {
                   <td>
                     {getEmployeeWithTime.name} {getEmployeeWithTime.lastname}
                   </td>
-                  <td>{getWorkTimeEmployee()}</td>
-                  <td>{getLunchTimeEmployee()}</td>
+                  <td>{getEmployeeWithTime.workTime}</td>
+                  <td>{getEmployeeWithTime.lunchTime}</td>
                 </tr>
               )}
             </tbody>

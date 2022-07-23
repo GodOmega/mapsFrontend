@@ -107,10 +107,9 @@ const group = () => {
       const { data } = await getEmployeesWithTime(getData, acces_token);
 
       setLoadingData(true);
-
       for (const employee of data) {
-        const workTime = handleWorkTimeEmployee(employee?.employeeTime);
-        const lunchTime = handleLunchTimeEmployee(employee?.employeeTime);
+        const workTime = employee?.employeeTime.workTime || 0;
+        const lunchTime = employee?.employeeTime.lunchTime || 0;
 
         const employeeData = {
           name: employee.name,
@@ -209,34 +208,6 @@ const group = () => {
       }
 
       alert("Ha ocurrido un error agregando al empleado");
-    }
-  };
-
-  const handleWorkTimeEmployee = (times = null) => {
-    if (times?.work.hours === 0 && times?.work.minutes === 0) {
-      return "0";
-    }
-
-    if (times?.work.hours > 0) {
-      return `${times.work.hours} horas`;
-    }
-
-    if (times?.work.minutes > 0) {
-      return `${times.work.minutes} minutos`;
-    }
-  };
-
-  const handleLunchTimeEmployee = (times = null) => {
-    if (times?.lunch.hours === 0 && times?.lunch.minutes === 0) {
-      return "0";
-    }
-
-    if (times?.lunch.hours > 0) {
-      return `${times?.lunch.hours} horas`;
-    }
-
-    if (times?.lunch.minutes > 0) {
-      return `${times?.lunch.minutes} minutos`;
     }
   };
 

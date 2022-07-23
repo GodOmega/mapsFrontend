@@ -32,7 +32,7 @@ const MenuSuperiorBar = () => {
           <img src="/images/logo.png" alt="Logo" />
         </div>
         <div className={styles.menu_icon}>
-          <MenuIcon onClick={handleShowMenu} fill='#fff' />
+          <MenuIcon onClick={handleShowMenu} fill='#00000' />
         </div>
       </div>
 
@@ -45,7 +45,7 @@ const MenuSuperiorBar = () => {
             <button onClick={handleLoggout} className={`main_button `}>cerrar sesión</button>
           </div>
           <div onClick={handleShowMenu} className={styles.fixed_menu__close_icon}>
-            <CloseIcon fill="#fff"/>
+            <CloseIcon fill="#ffff"/>
           </div>
         </div>
       </div>

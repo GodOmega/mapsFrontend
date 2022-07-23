@@ -411,8 +411,8 @@ const Enterprise = () => {
                       <tr>
                         <td>{getEmployeeWithTime.name}</td>
                         <td>{getEmployeeWithTime.lastname}</td>
-                        <td>{getWorkTimeEmployee()}</td>
-                        <td>{getLunchTimeEmployee()}</td>
+                        <td>{getEmployeeWithTime.workTime}</td>
+                        <td>{getEmployeeWithTime.lunchTime}</td>
                         <td>
                           <button
                             onClick={handleRemoveEmployee}
