@@ -103,6 +103,7 @@ const group = () => {
       let employeesArray = [];
       const getData = {
         enterpriseId: id,
+        groupId: group_id,
       };
       const { data } = await getEmployeesWithTime(getData, acces_token);
 
