@@ -1,12 +1,12 @@
 {
-    "theme_color": "#fff",
-    "background_color": "#fff",
+    "theme_color": "#ededec",
+    "background_color": "#141313",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "t1empo app",
-    "short_name": "t1empo",
-    "description": "t1empo app",
+    "name": "T1EMPO APP",
+    "short_name": "T1EMPO",
+    "description": "T1EMPO APP",
     "icons": [
         {
             "src": "/icon-192x192.png",
